@@ -188,7 +188,7 @@ export default function Dashboard() {
           </div>
           <div>
             <h1 style={{ color: BRAND.white, fontSize: 18, fontWeight: 700, margin: 0 }}>
-              Boletim Orçamentário Federal
+              Boletim Orçamentário Federal kkkkk
             </h1>
             <p style={{ color: '#85B7EB', fontSize: 12, margin: '2px 0 0' }}>
               Agência Espacial Brasileira — AEB · Divisão de Planejamento Orçamentário e Financeiro
