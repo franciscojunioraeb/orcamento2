@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Boletim Orçamentário AEB',
+  title: 'Boletim Orçamentário AEB kkkk',
   description: 'Painel de controle — Newsletter automática sobre LOA, LDO e PPA',
 };
 
