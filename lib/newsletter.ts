@@ -120,16 +120,38 @@ export async function buscarManchetes(topics: string[]): Promise<NewsletterData>
     timeZone: 'America/Sao_Paulo',
     day: '2-digit', month: '2-digit', year: 'numeric',
   });
-   
-  const prompt = `Você é um jornalista de orçamento público federal brasileiro.
-Hoje é ${hoje}. Liste manchetes REAIS e RECENTES sobre: ${topics.join(', ')}.
+  const prompt = `Você é um jornalista especializado em orçamento público federal brasileiro.
+Hoje é ${hoje}.
 
-Retorne JSON puro:
-{"data":"${hoje}","sumario":"2-3 frases.","manchetes":[{"titulo":"...","veiculo":"...","tema":"LOA|LDO|PPA|PLOA|FISCAL","resumo":"...","url":"..."}]}
+Faça uma busca e liste manchetes REAIS e RECENTES exclusivamente sobre os seguintes instrumentos de planejamento orçamentário do PODER EXECUTIVO FEDERAL brasileiro:
 
-5 a 8 manchetes. Se não souber a URL exata, use "https://www.google.com/search?q=LOA+2025+orcamento". Apenas JSON.`;  
+1. **LDO** – Lei de Diretrizes Orçamentárias do Poder Executivo Federal
+2. **LOA** – Lei Orçamentária Anual do Poder Executivo Federal
+3. **PPA** – Plano Plurianual do Poder Executivo Federal
+
+⚠️ REGRAS OBRIGATÓRIAS:
+- Inclua APENAS notícias relacionadas ao Executivo Federal (União). Exclua estados, municípios, Legislativo, Judiciário e outros poderes.
+- Inclua APENAS notícias sobre LDO, LOA ou PPA. Exclua temas fiscais genéricos, tributários ou de política econômica que não mencionem diretamente esses instrumentos.
+- As manchetes devem ser REAIS e RECENTES (preferencialmente dos últimos 30 dias).
+- Priorize fontes como: Ministério da Fazenda, SOF/MPOG, Câmara dos Deputados, Senado Federal, Tesouro Nacional, Siafi, e veículos jornalísticos de referência.
+
+Retorne APENAS JSON puro, sem markdown, sem explicações:
+{
+  "data": "${hoje}",
+  "sumario": "2 a 3 frases resumindo o cenário atual da LDO, LOA e PPA do Executivo Federal.",
+  "manchetes": [
+    {
+      "titulo": "Título da manchete",
+      "veiculo": "Nome do veículo ou fonte",
+      "tema": "LOA | LDO | PPA",
+      "resumo": "Resumo objetivo em 1 a 2 frases.",
+      "url": "URL exata ou https://www.google.com/search?q=LOA+2026+executivo+federal+orcamento"
+    }
+  ]
+}
+
+Retorne entre 5 e 8 manchetes. Apenas JSON.`; 
   
-
   const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
     method: 'POST',
     headers: {
