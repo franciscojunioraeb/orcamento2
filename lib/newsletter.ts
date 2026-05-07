@@ -130,27 +130,29 @@ Faça uma busca e liste manchetes REAIS e RECENTES exclusivamente sobre os segui
 3. **PPA** – Plano Plurianual do Poder Executivo Federal
 
 ⚠️ REGRAS OBRIGATÓRIAS:
+- Inclua APENAS notícias publicadas HOJE (${hoje}). Descarte qualquer manchete de datas anteriores, mesmo que seja recente.
+- Se não houver manchetes publicadas hoje, retorne o campo "manchetes" como array vazio [] e explique no campo "sumario".
 - Inclua APENAS notícias relacionadas ao Executivo Federal (União). Exclua estados, municípios, Legislativo, Judiciário e outros poderes.
 - Inclua APENAS notícias sobre LDO, LOA ou PPA. Exclua temas fiscais genéricos, tributários ou de política econômica que não mencionem diretamente esses instrumentos.
-- As manchetes devem ser REAIS e RECENTES (preferencialmente dos últimos 30 dias).
-- Priorize fontes como: Ministério da Fazenda, SOF/MPOG, Câmara dos Deputados, Senado Federal, Tesouro Nacional, Siafi, e veículos jornalísticos de referência.
+- As manchetes devem ser REAIS e verificáveis. Não invente títulos, veículos ou URLs.
+- Priorize fontes como: Ministério da Fazenda, SOF/MPOG, Câmara dos Deputados, Senado Federal, Tesouro Nacional, e veículos jornalísticos de referência.
 
 Retorne APENAS JSON puro, sem markdown, sem explicações:
 {
   "data": "${hoje}",
-  "sumario": "2 a 3 frases resumindo o cenário atual da LDO, LOA e PPA do Executivo Federal.",
+  "sumario": "2 a 3 frases resumindo o cenário do dia sobre LDO, LOA e PPA do Executivo Federal. Se não houver notícias hoje, informe isso claramente.",
   "manchetes": [
     {
       "titulo": "Título da manchete",
       "veiculo": "Nome do veículo ou fonte",
       "tema": "LOA | LDO | PPA",
       "resumo": "Resumo objetivo em 1 a 2 frases.",
-      "url": "URL exata ou https://www.google.com/search?q=LOA+2026+executivo+federal+orcamento"
+      "url": "URL exata da notícia. Se não souber, use https://www.google.com/search?q=LOA+2026+executivo+federal+orcamento+${hoje}"
     }
   ]
 }
 
-Retorne entre 5 e 8 manchetes. Apenas JSON.`; 
+Retorne entre 5 e 8 manchetes, somente se forem do dia ${hoje}. Apenas JSON.`;
   
   const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
     method: 'POST',
