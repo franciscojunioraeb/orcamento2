@@ -116,54 +116,39 @@ export interface NewsletterData {
 // ─────────────────────────────────────────────────────────
 
 export async function buscarManchetes(topics: string[]): Promise<NewsletterData> {
-  const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-
   const hoje = new Date().toLocaleDateString('pt-BR', {
     timeZone: 'America/Sao_Paulo',
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
+    day: '2-digit', month: '2-digit', year: 'numeric',
+  });
+   
+  const prompt = `Você é um jornalista de orçamento público federal brasileiro.
+Hoje é ${hoje}. Liste manchetes REAIS e RECENTES sobre: ${topics.join(', ')}.
+
+Retorne JSON puro:
+{"data":"${hoje}","sumario":"2-3 frases.","manchetes":[{"titulo":"...","veiculo":"...","tema":"LOA|LDO|PPA|PLOA|FISCAL","resumo":"...","url":"..."}]}
+
+5 a 8 manchetes. Se não souber a URL exata, use "https://www.google.com/search?q=LOA+2025+orcamento". Apenas JSON.`;  
+  
+
+  const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY ?? ''}`,
+    },
+    body: JSON.stringify({
+      model: 'perplexity/sonar',
+      messages: [{ role: 'user', content: prompt }],
+    }),
   });
 
-  const topicsStr = topics.join(', ');
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(`Groq API error ${res.status}: ${err}`);
+  }
 
-  const prompt = `Você é um jornalista especializado em orçamento público federal brasileiro.
-Hoje é ${hoje}. Busque as principais manchetes e notícias de HOJE sobre: ${topicsStr}.
-
-Retorne SOMENTE um JSON válido, sem texto extra, sem blocos de código markdown:
-{
-  "data": "${hoje}",
-  "sumario": "Parágrafo de 2-3 frases resumindo o cenário do dia em orçamento público.",
-  "manchetes": [
-    {
-      "titulo":  "Título completo da manchete",
-      "veiculo": "Nome do veículo ou fonte",
-      "tema":    "LOA | LDO | PPA | PLOA | FISCAL",
-      "resumo":  "Análise breve de 1-2 frases sobre o impacto da notícia.",
-      "url":     "URL real da matéria"
-    }
-  ]
-}
-
-Inclua de 5 a 8 manchetes, ordenadas por relevância e impacto.
-Priorize: Agência Brasil, Valor Econômico, Folha de S.Paulo, Estadão,
-Poder360, GOV.BR, Câmara dos Deputados, Senado Federal, TCU, STN.
-Retorne APENAS o JSON puro.`;
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const response = await (client.messages.create as any)({
-    model: 'claude-sonnet-4-20250514',
-    max_tokens: 2000,
-    tools: [{ type: 'web_search_20250305', name: 'web_search' }],
-    messages: [{ role: 'user', content: prompt }],
-  });
-
-  const fullText = (response.content as Array<{ type: string; text?: string }>)
-    .filter((b) => b.type === 'text')
-    .map((b) => b.text ?? '')
-    .join('');
-
-  let clean = fullText.trim();
+  const data = await res.json() as { choices: Array<{ message: { content: string } }> };
+  let clean = data.choices[0].message.content.trim();
   if (clean.startsWith('```')) {
     const parts = clean.split('```');
     clean = parts[1] ?? clean;
