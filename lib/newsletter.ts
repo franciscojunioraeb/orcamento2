@@ -126,28 +126,30 @@ Hoje é ${hoje}.
 Faça uma busca e liste manchetes REAIS e RECENTES exclusivamente sobre os seguintes instrumentos de planejamento orçamentário do PODER EXECUTIVO FEDERAL brasileiro:
 
 1. **LDO** – Lei de Diretrizes Orçamentárias do Poder Executivo Federal
-2. **LOA** – Lei Orçamentária Anual do Poder Executivo Federal
-3. **PPA** – Plano Plurianual do Poder Executivo Federal
+2. **PLDO** – Projeto de Lei de Diretrizes Orçamentárias do Poder Executivo Federal
+3. **LOA** – Lei Orçamentária Anual do Poder Executivo Federal
+4. **PLOA** – Projeto de Lei Orçamentária Anual do Poder Executivo Federal
+5. **PPA** – Plano Plurianual do Poder Executivo Federal
 
 ⚠️ REGRAS OBRIGATÓRIAS:
 - Inclua APENAS notícias publicadas HOJE (${hoje}). Descarte qualquer manchete de datas anteriores, mesmo que seja recente.
 - Se não houver manchetes publicadas hoje, retorne o campo "manchetes" como array vazio [] e explique no campo "sumario".
 - Inclua APENAS notícias relacionadas ao Executivo Federal (União). Exclua estados, municípios, Legislativo, Judiciário e outros poderes.
-- Inclua APENAS notícias sobre LDO, LOA ou PPA. Exclua temas fiscais genéricos, tributários ou de política econômica que não mencionem diretamente esses instrumentos.
+- Inclua APENAS notícias sobre LDO, PLDO, LOA, PLOA ou PPA. Exclua temas fiscais genéricos, tributários ou de política econômica que não mencionem diretamente esses instrumentos.
 - As manchetes devem ser REAIS e verificáveis. Não invente títulos, veículos ou URLs.
 - Priorize fontes como: Ministério da Fazenda, SOF/MPOG, Câmara dos Deputados, Senado Federal, Tesouro Nacional, e veículos jornalísticos de referência.
 
 Retorne APENAS JSON puro, sem markdown, sem explicações:
 {
   "data": "${hoje}",
-  "sumario": "2 a 3 frases resumindo o cenário do dia sobre LDO, LOA e PPA do Executivo Federal. Se não houver notícias hoje, informe isso claramente.",
+  "sumario": "2 a 3 frases resumindo o cenário do dia sobre LDO, PLDO, LOA, PLOA e PPA do Executivo Federal. Se não houver notícias hoje, informe isso claramente.",
   "manchetes": [
     {
       "titulo": "Título da manchete",
       "veiculo": "Nome do veículo ou fonte",
-      "tema": "LOA | LDO | PPA",
+      "tema": "LOA | PLOA | LDO | PLDO | PPA",
       "resumo": "Resumo objetivo em 1 a 2 frases.",
-      "url": "URL exata da notícia. Se não souber, use https://www.google.com/search?q=LOA+2026+executivo+federal+orcamento+${hoje}"
+      "url": "URL exata da notícia. Se não souber, use https://www.google.com/search?q=PLOA+PLDO+2026+executivo+federal+orcamento+${hoje}"
     }
   ]
 }
